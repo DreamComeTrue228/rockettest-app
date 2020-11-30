@@ -14,9 +14,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
-Route::get("test", function () {
-   dd("Some body from the Shrek");
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(["prefix" => "products", "namespace" => "Products"], function () {
+    Route::get("", "ProductController@index")->name("products.index");
+    Route::get("{slug}", "ProductController@show")->name("products.show");
 });

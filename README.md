@@ -14,3 +14,9 @@
 Технологии, которые мы используем в работе:
 Верстка – Html, Css, Javascript
 Бэкенд — Php (Yii2 или Laravel)
+
+
+------------------------------------------------------------
+
+composer install
+npm install && npm run dev
