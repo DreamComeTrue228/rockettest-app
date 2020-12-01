@@ -37,4 +37,4 @@
     php artisan db:seed 
 
 #4. Запуск очередей   
-    php artisan queue:work --queue={payments - название очереди}
+    php artisan queue:work --queue={payments - название очереди} --daemon
