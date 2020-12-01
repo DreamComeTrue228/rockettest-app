@@ -11,10 +11,9 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::query()->get();
-
         return view("products.index", [
-            "products" => Product::query()->with("categories")->get()
+            "products" => Product::query()
+                ->with("categories")->get()
         ]);
     }
 
@@ -24,7 +23,7 @@ class ProductController extends Controller
         $currencies = Currency::query()->get()->toJson();
         return view("products.show", [
             "product" => $product,
-            "currencies" => $currencies
+            "currencies" => $currencies,
         ]);
     }
 }

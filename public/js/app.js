@@ -1988,14 +1988,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ProductShowComponent",
-  props: ["product", "category", "currencies"],
+  props: ["product", "category", "currencies", "app-url", "public-id"],
   data: function data() {
     return {
-      defaultCurrency: "тг",
+      defaultCurrency: "KZT",
       defaultProductPrice: this.product.price,
-      productPrice: ""
+      productPrice: "",
+      showIfProductAreAvailable: false
     };
   },
   methods: {
@@ -2008,6 +2020,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           _this.defaultCurrency = cur.code;
         }
       });
+    },
+    pay: function pay() {
+      var widget = new cp.CloudPayments();
+      var currentProdId = this.product.id;
+      var url = this.appUrl;
+      widget.pay('auth', // или 'charge'
+      {
+        //options
+        publicId: this.publicId,
+        //id из личного кабинета
+        description: "\u041E\u043F\u043B\u0430\u0442\u0430 \u0442\u043E\u0432\u0430\u0440\u043E\u0432 \u0432 ".concat(url),
+        //назначение
+        amount: this.productPrice,
+        //сумма
+        currency: this.defaultCurrency,
+        //валюта
+        skin: "classic1" //дизайн виджета (необязательно)
+
+      }, {
+        onSuccess: function onSuccess(options) {
+          // success
+          //действие при успешной оплате
+          options.productId = currentProdId;
+          axios.post("".concat(url, "/api/payments/saveOnHistory"), {
+            pay: options
+          });
+        },
+        onFail: function onFail(reason, options) {// fail
+          //действие при неуспешной оплате
+          // console.log(reason)
+        },
+        onComplete: function onComplete(paymentResult, options) {//Вызывается как только виджет получает от api.cloudpayments ответ с результатом транзакции.
+          //например вызов вашей аналитики Facebook Pixel
+          // console.log(paymentResult)
+        }
+      });
+      window.reload();
     }
   },
   mounted: function mounted() {
@@ -2020,7 +2069,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 0:
               _this2.productPrice = _this2.defaultProductPrice;
 
-            case 1:
+              if (_this2.product.quantity > 0) {
+                _this2.showIfProductAreAvailable = true;
+              }
+
+            case 2:
             case "end":
               return _context.stop();
           }
@@ -38486,6 +38539,21 @@ var render = function() {
         _vm._v("Category: " + _vm._s(_vm.category.name))
       ]),
       _vm._v(" "),
+      _vm.showIfProductAreAvailable
+        ? _c("div", { staticClass: "card-title" }, [
+            _vm._v("\n            Есть в наличии\n            "),
+            _c("img", {
+              attrs: {
+                src:
+                  "https://icon-icons.com/icons2/894/PNG/32/Tick_Mark_Circle_icon-icons.com_69145.png",
+                alt: ""
+              }
+            })
+          ])
+        : _c("div", { staticClass: "card-title" }, [
+            _vm._v("\n            Нет в наличии\n        ")
+          ]),
+      _vm._v(" "),
       _c("h4", { staticClass: "card-subtitle mb-2 text-muted" }, [
         _vm._v(
           "Price: " +
@@ -38500,12 +38568,20 @@ var render = function() {
         "p",
         { staticClass: "card-text", staticStyle: { "font-size": "18px" } },
         [_vm._v("\n            " + _vm._s(_vm.product.body) + "\n        ")]
-      ),
-      _vm._v(" "),
-      _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
-        _vm._v("Купить")
-      ])
-    ])
+      )
+    ]),
+    _vm._v(" "),
+    _vm.showIfProductAreAvailable === true
+      ? _c(
+          "button",
+          {
+            staticClass: "btn btn-primary mt-2",
+            attrs: { type: "button" },
+            on: { click: _vm.pay }
+          },
+          [_vm._v("Pay Widget\n    ")]
+        )
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
