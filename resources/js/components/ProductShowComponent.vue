@@ -31,7 +31,7 @@ export default {
     props: ["product", "category", "currencies"],
     data: function () {
         return {
-            defaultCurrency: "тг",
+            defaultCurrency: "KZT",
             defaultProductPrice: this.product.price,
             productPrice: ""
         }

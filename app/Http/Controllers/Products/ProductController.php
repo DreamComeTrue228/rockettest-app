@@ -14,7 +14,7 @@ class ProductController extends Controller
         $products = Product::query()->get();
 
         return view("products.index", [
-            "products" => Product::query()->get()
+            "products" => Product::query()->with("categories")->get()
         ]);
     }
 
