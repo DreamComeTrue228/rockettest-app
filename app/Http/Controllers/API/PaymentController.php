@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Queue;
 
 class PaymentController extends Controller
 {
+    /**
+     * @param Request $request
+     */
     public function saveOnHistory(Request $request)
     {
         $paymentResult = $request->get("pay");

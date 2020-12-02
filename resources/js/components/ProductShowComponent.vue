@@ -87,7 +87,6 @@ export default {
                     }
                 }
             );
-            window.reload();
         }
     },
     async mounted() {

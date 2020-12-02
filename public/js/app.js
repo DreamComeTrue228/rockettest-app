@@ -2056,7 +2056,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           // console.log(paymentResult)
         }
       });
-      window.reload();
     }
   },
   mounted: function mounted() {
